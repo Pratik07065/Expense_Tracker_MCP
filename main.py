@@ -2,15 +2,34 @@ from fastmcp import FastMCP
 from pathlib import Path
 import aiosqlite
 import sqlite3
+import os
+import tempfile
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "expenses.db"
+
+def get_db_path() -> Path:
+    if custom_path := os.getenv("EXPENSES_DB_PATH"):
+        path = Path(custom_path).resolve()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path
+
+    local_path = Path(__file__).resolve().parent / "expenses.db"
+    try:
+        test_file = local_path.parent / ".write_test"
+        test_file.touch()
+        test_file.unlink()
+        return local_path
+    except (PermissionError, OSError):
+        return Path(tempfile.gettempdir()) / "expenses.db"
+
+
+DB_PATH = get_db_path()
 
 mcp = FastMCP("ExpenseTracker")
 
 
 def init_db():
     try:
+        DB_PATH.parent.mkdir(parents=True, exist_ok=True)
         with sqlite3.connect(DB_PATH) as c:
             c.execute("""
                 CREATE TABLE IF NOT EXISTS expenses (
