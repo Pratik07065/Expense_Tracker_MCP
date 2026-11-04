@@ -1,0 +1,3 @@
+# Requires Python >= 3.12
+fastmcp>=4.1.6
+uv>=0.4.0

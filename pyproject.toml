@@ -1,0 +1,15 @@
+[project]
+name = "demo-mcp"
+version = "0.1.0"
+description = "FastMCP Demo Server"
+readme = "README.md"
+authors = [
+    { name = "pratik0765", email = "pratikpawar7028@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=4.1.6",
+]
+
+[tool.uv]
+package = false
